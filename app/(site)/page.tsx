@@ -1,32 +1,306 @@
-import Link from 'next/link';import {Banknote,PhoneCall,Sparkles,ArrowUpRight,ArrowRight} from 'lucide-react';import Hero from '@/components/Hero';import Art from '@/components/Art';import ProductCard from '@/components/ProductCard';import Reveal from '@/components/Reveal';
-import {DEPTS} from '@/lib/depts';import {getProducts} from '@/lib/products';
-export const dynamic='force-dynamic';
 
-const Head=({t,h,sub}:{t:string;h:string;sub?:string})=><div className="mb-8 flex items-end justify-between gap-4 md:mb-10">
-  <div><h2 className="text-4xl font-light md:text-6xl">{t}</h2>{sub&&<p className="mt-3 text-mute">{sub}</p>}<span className="mt-5 block h-px w-24 bg-gradient-to-r from-[var(--g1)] via-[var(--g2)] to-transparent"/></div>
-  <Link href={h} className="btn o group !hidden shrink-0 items-center gap-2 !px-5 !py-3 sm:!inline-flex">Все <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1"/></Link></div>;
-const Sec=({children}:{children:React.ReactNode})=><section className="mx-auto max-w-7xl px-5 py-14 md:py-20">{children}</section>;
-const NAMES=DEPTS.map(d=>d.name);
-const MQ=<>{NAMES.map(n=><span key={n} className="outline-t flex items-center px-8 text-[clamp(40px,7vw,96px)] font-extralight leading-none">{n}<i className="ml-16 h-2 w-2 rotate-45 bg-gradient-to-br from-[var(--g1)] to-[var(--g3)]"/></span>)}</>;
+import Link from 'next/link';
+import {
+  Banknote,
+  PhoneCall,
+  Sparkles,
+  ArrowUpRight,
+  ArrowRight,
+  MoveRight,
+} from 'lucide-react';
 
-export default async function Home(){
- const all=await getProducts(),nw=all.filter(p=>p.is_new).slice(0,4),sale=all.filter(p=>p.old_price).slice(0,4);
- return <><Hero/>
+import Hero from '@/components/Hero';
+import Art from '@/components/Art';
+import ProductCard from '@/components/ProductCard';
+import { DEPTS } from '@/lib/depts';
+import { getProducts } from '@/lib/products';
 
- <div aria-hidden="true" className="overflow-hidden whitespace-nowrap border-y border-line py-6"><div className="flex w-max animate-[mq_60s_linear_infinite]"><div className="flex">{MQ}</div><div className="flex">{MQ}</div></div></div>
+export const dynamic = 'force-dynamic';
 
- <Sec><Head t="Главные разделы" h="/catalog"/>
-  <Reveal><div className="grid grid-cols-2 gap-3 md:flex md:h-[540px]">{DEPTS.map(d=><Link key={d.id} href={`/catalog?d=${d.id}`} className="group relative block overflow-hidden rounded-[24px] border border-line transition-[flex-grow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] focus-visible:flex-[2.6] md:flex-1 md:hover:flex-[2.6]">
-   <Art file={`dept-${d.id}`} dept={d.id} fix className="aspect-[3/4] w-full md:aspect-auto md:h-full"/>
-   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"/>
-   <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" style={{background:'linear-gradient(135deg,color-mix(in srgb,var(--g1) 30%,transparent),transparent 55%,color-mix(in srgb,var(--g3) 22%,transparent))'}}/>
-   <span className="glass absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full text-white transition duration-500 group-hover:rotate-45"><ArrowUpRight size={18}/></span>
-   <div className="absolute inset-x-5 bottom-5 text-white"><b className="block text-[15px] font-semibold leading-tight tracking-wide md:text-xl">{d.name}</b><span className="mt-1 block text-xs text-white/75 md:text-sm">{d.sub}</span></div>
-  </Link>)}</div></Reveal></Sec>
+function SectionHeading({
+  eyebrow,
+  title,
+  href,
+}: {
+  eyebrow: string;
+  title: string;
+  href: string;
+}) {
+  return (
+    <div className="mb-7 flex items-end justify-between gap-4 md:mb-9">
+      <div>
+        <p className="mb-3 text-[9px] font-medium uppercase tracking-[0.28em] text-ac">
+          {eyebrow}
+        </p>
 
- {nw.length>0&&<Sec><Head t="Новинки" h="/catalog"/><div className="grid grid-cols-2 gap-4 md:grid-cols-4">{nw.map(p=><ProductCard key={p.id} p={p}/>)}</div></Sec>}
- {sale.length>0&&<Sec><Head t="Подборка" h="/catalog"/><div className="grid grid-cols-2 gap-4 md:grid-cols-4">{sale.map(p=><ProductCard key={p.id} p={p}/>)}</div></Sec>}
+        <h2 className="text-3xl font-light tracking-[-0.045em] md:text-5xl">
+          {title}
+        </h2>
+      </div>
 
- <Sec><div className="grid gap-4 md:grid-cols-3">{[[Banknote,'Оплата при получении','Платите, когда получите заказ'],[PhoneCall,'Заказ по номеру телефона','Подтверждение через ваш номер'],[Sparkles,'4 направления','Одежда, кольца, цветы и кофе в одном месте']].map(([I,t,s]:any,i:number)=><Reveal key={t} delay={i*.08}><div className="glass group h-full rounded-[24px] p-7 transition duration-500 hover:-translate-y-1 hover:shadow-[0_30px_70px_-35px_var(--glow)]">
-  <span className="grad-ring mb-5 grid h-12 w-12 place-items-center rounded-2xl" style={{background:'color-mix(in srgb,var(--g2) 12%,transparent)'}}><I size={22} className="text-[var(--g2)]"/></span>
-  <b className="block text-lg font-semibold tracking-tight">{t}</b><p className="mt-2 text-sm text-mute">{s}</p></div></Reveal>)}</div></Sec></>}
+      <Link
+        href={href}
+        className="lnk mb-1 flex shrink-0 items-center gap-2 text-[10px] uppercase tracking-[0.14em] text-mute transition-colors hover:text-ac"
+      >
+        <span>Все товары</span>
+        <ArrowUpRight size={14} />
+      </Link>
+    </div>
+  );
+}
+
+const benefits = [
+  {
+    Icon: Banknote,
+    number: '01',
+    title: 'Оплата при получении',
+    description: 'Оплачивайте заказ, когда получите его.',
+  },
+  {
+    Icon: PhoneCall,
+    number: '02',
+    title: 'Заказ по телефону',
+    description: 'Подтверждение заказа по вашему номеру.',
+  },
+  {
+    Icon: Sparkles,
+    number: '03',
+    title: 'Четыре направления',
+    description: 'Одежда, кольца, цветы и кофе в одном месте.',
+  },
+];
+
+export default async function Home() {
+  const all = await getProducts();
+
+  const nw = all.filter((p) => p.is_new).slice(0, 4);
+  const sale = all.filter((p) => p.old_price).slice(0, 4);
+
+  return (
+    <main className="overflow-hidden">
+      {/* HERO — asosiy bosh sahifa */}
+      <Hero />
+
+      {/* Kategoriyalar navigatsiyasi */}
+      <section className="border-y border-line">
+        <div className="mx-auto max-w-7xl px-5 py-8 md:py-10">
+          <div className="mb-6 flex items-center justify-between">
+            <p className="text-[9px] uppercase tracking-[0.25em] text-mute">
+              Наши направления
+            </p>
+
+            <span className="text-[9px] tracking-[0.2em] text-ac">
+              L / VISION
+            </span>
+          </div>
+
+          <div className="flex gap-5 overflow-x-auto pb-2 md:justify-between md:gap-8">
+            {DEPTS.map((d, index) => (
+              <Link
+                key={d.id}
+                href={`/catalog?d=${d.id}`}
+                className="group w-[76px] shrink-0 text-center md:w-28"
+              >
+                <div className="relative mx-auto mb-3 aspect-square w-full rounded-full border border-line p-1 transition-all duration-500 group-hover:border-ac group-hover:shadow-[0_0_25px_var(--glow)]">
+                  <div className="h-full w-full overflow-hidden rounded-full">
+                    <Art
+                      file={`dept-${d.id}`}
+                      dept={d.id}
+                      className="aspect-square rounded-full transition-transform duration-700 group-hover:scale-110"
+                    />
+                  </div>
+
+                  <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full border border-line bg-bg text-[8px] text-ac">
+                    0{index + 1}
+                  </span>
+                </div>
+
+                <span className="block text-[9px] uppercase tracking-[0.12em] text-mute transition-colors duration-300 group-hover:text-ac md:text-[10px]">
+                  {d.name}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Brand statement */}
+      <section className="mx-auto max-w-7xl px-5 py-14 md:py-20">
+        <div className="grid gap-5 border-b border-line pb-10 md:grid-cols-[1fr_auto] md:items-end md:gap-10 md:pb-14">
+          <div>
+            <p className="mb-4 text-[9px] uppercase tracking-[0.3em] text-ac">
+              The L Vision edit
+            </p>
+
+            <h2 className="max-w-3xl text-4xl font-light leading-[1.12] tracking-[-0.055em] md:text-6xl lg:text-7xl">
+              Стиль начинается
+              <span className="block text-ac">с деталей.</span>
+            </h2>
+          </div>
+
+          <p className="max-w-xs text-sm leading-7 text-mute md:text-right">
+            Откройте коллекции L Vision и найдите детали, которые подчеркнут
+            ваш индивидуальный стиль.
+          </p>
+        </div>
+      </section>
+
+      {/* Yangi mahsulotlar */}
+      {nw.length > 0 && (
+        <section className="mx-auto max-w-7xl px-5 pb-14 md:pb-20">
+          <SectionHeading
+            eyebrow="Недавно в коллекции / 01"
+            title="Новинки"
+            href="/catalog"
+          />
+
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-5 md:gap-y-10">
+            {nw.map((p) => (
+              <ProductCard key={p.id} p={p} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Asosiy kategoriyalar */}
+      <section className="border-y border-line bg-[var(--surf)]">
+        <div className="mx-auto max-w-7xl px-5 py-12 md:py-20">
+          <SectionHeading
+            eyebrow="Откройте для себя / 02"
+            title="Главные разделы"
+            href="/catalog"
+          />
+
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
+            {DEPTS.map((d, index) => (
+              <Link
+                key={d.id}
+                href={`/catalog?d=${d.id}`}
+                className="group relative block overflow-hidden bg-bg"
+              >
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  <Art
+                    file={`dept-${d.id}`}
+                    dept={d.id}
+                    className="aspect-[3/4] transition-transform duration-700 group-hover:scale-[1.045]"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-95" />
+
+                  <div className="absolute inset-0 border border-white/0 transition-colors duration-500 group-hover:border-[var(--gold-border)]" />
+
+                  <span className="absolute left-3 top-3 text-[9px] tracking-[0.2em] text-white/80 md:left-5 md:top-5">
+                    0{index + 1}
+                  </span>
+
+                  <ArrowUpRight
+                    size={19}
+                    strokeWidth={1.2}
+                    className="absolute right-3 top-3 -translate-x-1 -translate-y-1 text-white opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 md:right-5 md:top-5"
+                  />
+
+                  <div className="absolute inset-x-0 bottom-0 p-3 md:p-5">
+                    <p className="mb-2 text-[8px] uppercase tracking-[0.22em] text-white/60 md:text-[9px]">
+                      L Vision collection
+                    </p>
+
+                    <h3 className="text-sm font-light tracking-[0.04em] text-white md:text-xl">
+                      {d.name}
+                    </h3>
+
+                    <p className="mt-2 line-clamp-2 text-[10px] leading-5 text-white/65 md:text-xs">
+                      {d.sub}
+                    </p>
+
+                    <div className="mt-4 flex items-center gap-2 text-[9px] uppercase tracking-[0.17em] text-white/90">
+                      <span>Открыть раздел</span>
+                      <MoveRight
+                        size={13}
+                        className="transition-transform duration-300 group-hover:translate-x-1.5"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tanlangan mahsulotlar */}
+      {sale.length > 0 && (
+        <section className="mx-auto max-w-7xl px-5 py-14 md:py-20">
+          <SectionHeading
+            eyebrow="Выбор L Vision / 03"
+            title="Подборка"
+            href="/catalog"
+          />
+
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-5 md:gap-y-10">
+            {sale.map((p) => (
+              <ProductCard key={p.id} p={p} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Afzalliklar */}
+      <section className="mx-auto max-w-7xl px-5 pb-14 pt-4 md:pb-20">
+        <div className="border-y border-line">
+          <div className="grid divide-y divide-line md:grid-cols-3 md:divide-x md:divide-y-0">
+            {benefits.map(({ Icon, number, title, description }) => (
+              <div
+                key={number}
+                className="group relative p-6 transition-colors duration-500 hover:bg-[var(--gold-soft)] md:p-8 lg:p-10"
+              >
+                <div className="mb-8 flex items-center justify-between">
+                  <Icon
+                    size={22}
+                    strokeWidth={1.2}
+                    className="text-ac transition-transform duration-500 group-hover:scale-110"
+                  />
+
+                  <span className="text-[9px] tracking-[0.2em] text-mute">
+                    {number} / 03
+                  </span>
+                </div>
+
+                <h3 className="text-base font-normal tracking-wide md:text-lg">
+                  {title}
+                </h3>
+
+                <p className="mt-2 max-w-xs text-sm leading-6 text-mute">
+                  {description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pastki chaqiriq */}
+        <div className="flex flex-col gap-5 py-10 md:flex-row md:items-end md:justify-between md:py-14">
+          <div>
+            <p className="mb-3 text-[9px] uppercase tracking-[0.28em] text-ac">
+              Your style. Your choice.
+            </p>
+
+            <h2 className="text-3xl font-light tracking-[-0.04em] md:text-5xl">
+              Найдите своё.
+            </h2>
+          </div>
+
+          <Link
+            href="/catalog"
+            className="btn group self-start md:self-auto"
+          >
+            <span>В каталог</span>
+            <ArrowRight
+              size={15}
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            />
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
+}

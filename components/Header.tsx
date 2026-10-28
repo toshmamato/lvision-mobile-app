@@ -1,63 +1,376 @@
+
 'use client';
+
 import Link from 'next/link';
-import {usePathname,useRouter,useSearchParams} from 'next/navigation';
-import {AnimatePresence,motion} from 'framer-motion';
-import {Sun,Moon,Heart,ShoppingBag,Search,User,Menu,X,ChevronDown,ArrowUpRight} from 'lucide-react';
-import {Suspense,useEffect,useRef,useState} from 'react';
-import {useStore} from '@/lib/store';import {useMounted} from '@/lib/useMounted';import {DEPTS} from '@/lib/depts';import {toggleTheme,useTheme} from '@/lib/theme';
+import {
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  Sun,
+  Moon,
+  Heart,
+  ShoppingBag,
+  Search,
+  User,
+  LayoutDashboard,
+} from 'lucide-react';
+import { Suspense } from 'react';
 
-const ease=[.16,1,.3,1] as const;
-const Badge=({n}:{n:number})=><motion.i key={n} initial={{scale:.4}} animate={{scale:1}} className="absolute right-0 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-gradient-to-br from-[var(--g1)] to-[var(--g2)] px-1 text-[10px] font-semibold not-italic text-white">{n}</motion.i>;
-const ic='relative grid h-10 w-10 place-items-center rounded-full transition duration-200 hover:bg-[var(--hair)] active:scale-90';
+import { useStore } from '@/lib/store';
+import { useMounted } from '@/lib/useMounted';
+import { DEPTS } from '@/lib/depts';
+import { toggleTheme, useTheme } from '@/lib/theme';
 
-function Logo({className=''}:{className?:string}){return <Link href="/" aria-label="L Vision — на главную" className={'group flex items-center gap-2.5 '+className}>
-  <span className="f-display grid h-8 w-8 place-items-center rounded-[10px] bg-gradient-to-br from-[var(--g1)] via-[var(--g2)] to-[var(--g3)] text-[13px] font-bold text-white shadow-[0_6px_20px_-6px_var(--glow)] transition-transform duration-300 group-hover:rotate-[-8deg]">L</span>
-  <span className="f-display text-[15px] font-semibold tracking-tight">L Vision</span></Link>}
+const iconButton =
+  'group relative grid h-10 w-10 shrink-0 place-items-center rounded-full text-mute transition-all duration-300 hover:bg-[var(--gold-soft)] hover:text-[var(--g2)] active:scale-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--g2)]';
 
-/** useSearchParams Suspense ichida bo'lishi shart (Next.js). */
-function Nav(){
-  const p=usePathname(),d=useSearchParams().get('d'),[open,setOpen]=useState(false),ref=useRef<HTMLDivElement>(null);
-  useEffect(()=>setOpen(false),[p,d]);
-  useEffect(()=>{if(!open)return;const k=(e:KeyboardEvent)=>e.key==='Escape'&&setOpen(false),c=(e:MouseEvent)=>{if(!ref.current?.contains(e.target as Node))setOpen(false)};addEventListener('keydown',k);addEventListener('mousedown',c);return()=>{removeEventListener('keydown',k);removeEventListener('mousedown',c)}},[open]);
-  const item=(on:boolean)=>'relative rounded-full px-4 py-2 text-[13px] font-medium transition-colors '+(on?'text-fg':'text-mute hover:text-fg');
-  const Pill=({on}:{on:boolean})=>on?<motion.span layoutId="navpill" transition={{duration:.4,ease}} className="absolute inset-0 -z-10 rounded-full bg-[var(--hair)] ring-1 ring-[var(--line)]"/>:null;
-  const home=p==='/',cat=p==='/catalog'&&!d;
-  return <nav aria-label="Основная навигация" className="hidden items-center gap-1 md:flex">
-    <Link href="/" aria-current={home?'page':undefined} className={item(home)}><Pill on={home}/>Главная</Link>
-    <Link href="/catalog" aria-current={cat?'page':undefined} className={item(cat)}><Pill on={cat}/>Каталог</Link>
-    <div ref={ref} className="relative" onMouseEnter={()=>setOpen(true)} onMouseLeave={()=>setOpen(false)}>
-      <button aria-expanded={open} aria-haspopup="true" onClick={()=>setOpen(o=>!o)} className={item(p==='/catalog'&&!!d)+' flex items-center gap-1'}><Pill on={p==='/catalog'&&!!d}/>Разделы<ChevronDown size={14} className={'transition-transform duration-300 '+(open?'rotate-180':'')}/></button>
-      <AnimatePresence>{open&&<motion.div initial={{opacity:0,y:8,scale:.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:6,scale:.98}} transition={{duration:.22,ease}} className="absolute right-0 top-full z-50 w-[380px] pt-3">
-        <div className="glass rounded-[20px] p-2 shadow-[0_30px_80px_-30px_var(--glow)]">{DEPTS.map(x=><Link key={x.id} href={`/catalog?d=${x.id}`} className="group flex items-center justify-between rounded-2xl px-4 py-3 transition-colors hover:bg-[var(--hair)]"><span><b className="block text-[13px] font-semibold tracking-wide">{x.name}</b><span className="text-xs text-mute">{x.sub}</span></span><ArrowUpRight size={16} className="text-mute transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-fg"/></Link>)}</div></motion.div>}</AnimatePresence>
-    </div></nav>}
+function Badge({ n }: { n: number }) {
+  return (
+    <motion.i
+      key={n}
+      initial={{ scale: 0.5, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      className="absolute -right-0.5 -top-0.5 grid h-[17px] min-w-[17px] place-items-center rounded-full border border-bg bg-[var(--g2)] px-1 text-[9px] font-semibold not-italic leading-none text-[#100d06]"
+    >
+      {n}
+    </motion.i>
+  );
+}
 
-function Menu_({open,close}:{open:boolean;close:()=>void}){
-  const r=useRouter(),{user,setLogin}=useStore(),theme=useTheme(),p=usePathname();
-  useEffect(()=>{close()},[p]); // eslint-disable-line
-  useEffect(()=>{if(!open)return;document.body.style.overflow='hidden';const k=(e:KeyboardEvent)=>e.key==='Escape'&&close();addEventListener('keydown',k);return()=>{document.body.style.overflow='';removeEventListener('keydown',k)}},[open]); // eslint-disable-line
-  const L=[{h:'/',l:'Главная'},{h:'/catalog',l:'Каталог'},...DEPTS.map(d=>({h:`/catalog?d=${d.id}`,l:d.name,s:d.sub})),{h:'/fav',l:'Избранное'}];
-  return <AnimatePresence>{open&&<motion.div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Меню" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:.25}} className="fixed inset-0 z-[45] overflow-y-auto bg-bg/95 px-6 pb-10 pt-24 backdrop-blur-2xl md:hidden">
-    <div className="pointer-events-none absolute -right-24 top-10 h-72 w-72 rounded-full opacity-40 blur-3xl" style={{background:'radial-gradient(circle,var(--g2),transparent 70%)'}}/>
-    <ul className="relative space-y-1">{L.map((x,i)=><motion.li key={x.h} initial={{opacity:0,y:18}} animate={{opacity:1,y:0}} transition={{delay:.06+i*.05,duration:.5,ease}}>
-      <Link href={x.h} onClick={close} className="flex items-baseline justify-between border-b border-line py-4"><span className="text-[22px] font-light tracking-tight">{x.l}</span>{'s' in x&&<span className="text-xs text-mute">{(x as any).s}</span>}</Link></motion.li>)}</ul>
-    <motion.div initial={{opacity:0,y:18}} animate={{opacity:1,y:0}} transition={{delay:.45,duration:.5,ease}} className="relative mt-8 flex gap-3">
-      <button onClick={()=>{close();user?r.push('/profile'):setLogin(true)}} className="btn flex-1">{user?'Профиль':'Войти'}</button>
-      <button onClick={toggleTheme} aria-label={theme==='dark'?'Включить светлую тему':'Включить тёмную тему'} className="btn o grid place-items-center !px-5">{theme==='dark'?<Sun size={18}/>:<Moon size={18}/>}</button>
-    </motion.div></motion.div>}</AnimatePresence>}
+function Nav() {
+  const pathname = usePathname();
+  const department = useSearchParams().get('d');
 
-export default function Header(){
-  const m=useMounted(),r=useRouter(),theme=useTheme(),{cart,fav,user,setOpen,setSearch,setLogin}=useStore(),[menu,setMenu]=useState(false);
-  const n=m?cart.reduce((a,c)=>a+c.qty,0):0,f=m?fav.length:0,dark=theme==='dark';
-  return <><header className="v2 sticky top-0 z-50 bg-transparent px-3 pt-3"><div className="glass mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full pl-4 pr-2 shadow-[0_18px_50px_-30px_var(--glow)] md:pl-5">
-    <Logo/>
-    <Suspense fallback={<nav className="hidden md:block"/>}><Nav/></Suspense>
-    <div className="flex items-center">
-      <button aria-label="Поиск" onClick={()=>setSearch(true)} className={ic}><Search size={18}/></button>
-      <button aria-label={dark?'Включить светлую тему':'Включить тёмную тему'} onClick={toggleTheme} className={ic+' hidden md:grid'}>
-        <AnimatePresence mode="wait" initial={false}><motion.span key={theme} initial={{rotate:-70,opacity:0}} animate={{rotate:0,opacity:1}} exit={{rotate:70,opacity:0}} transition={{duration:.18}} className="block">{dark?<Sun size={18}/>:<Moon size={18}/>}</motion.span></AnimatePresence></button>
-      <Link href="/fav" aria-label="Избранное" className={ic+' hidden md:grid'}><Heart size={18}/>{f>0&&<Badge n={f}/>}</Link>
-      <button aria-label="Профиль" onClick={()=>user?r.push('/profile'):setLogin(true)} className={ic+' hidden md:grid'}><User size={18}/></button>
-      <button aria-label="Корзина" onClick={()=>setOpen(true)} className={ic}><ShoppingBag size={18}/>{n>0&&<Badge n={n}/>}</button>
-      <button aria-label={menu?'Закрыть меню':'Открыть меню'} aria-expanded={menu} aria-controls="mobile-menu" onClick={()=>setMenu(o=>!o)} className={ic+' md:hidden'}><AnimatePresence mode="wait" initial={false}><motion.span key={String(menu)} initial={{rotate:-60,opacity:0}} animate={{rotate:0,opacity:1}} exit={{rotate:60,opacity:0}} transition={{duration:.16}}>{menu?<X size={20}/>:<Menu size={20}/>}</motion.span></AnimatePresence></button>
-    </div></div></header>
-    <div className="v2" style={{display:'contents'}}><Menu_ open={menu} close={()=>setMenu(false)}/></div></>}
+  const active = (href: string, dept?: string) => {
+    if (dept) {
+      return pathname === '/catalog' && department === dept;
+    }
+
+    if (href === '/') {
+      return pathname === '/';
+    }
+
+    if (href === '/catalog') {
+      return pathname === '/catalog' && !department;
+    }
+
+    return pathname.startsWith(href);
+  };
+
+  const linkClass = (isActive: boolean) =>
+    'relative whitespace-nowrap py-2 text-[10px] uppercase tracking-[0.13em] transition-colors duration-300 hover:text-[var(--g2)] ' +
+    (isActive ? 'text-[var(--g2)]' : 'text-mute');
+
+  return (
+    <nav
+      aria-label="Основная навигация"
+      className="hidden items-center gap-5 lg:flex xl:gap-7"
+    >
+      <Link
+        href="/"
+        aria-current={active('/') ? 'page' : undefined}
+        className={linkClass(active('/'))}
+      >
+        Главная
+        {active('/') && (
+          <span className="absolute inset-x-0 -bottom-[18px] h-px bg-[var(--g2)]" />
+        )}
+      </Link>
+
+      <Link
+        href="/catalog"
+        aria-current={active('/catalog') ? 'page' : undefined}
+        className={linkClass(active('/catalog'))}
+      >
+        Каталог
+        {active('/catalog') && (
+          <span className="absolute inset-x-0 -bottom-[18px] h-px bg-[var(--g2)]" />
+        )}
+      </Link>
+
+      {DEPTS.map((dept) => {
+        const selected = active('/catalog', dept.id);
+
+        return (
+          <Link
+            key={dept.id}
+            href={`/catalog?d=${dept.id}`}
+            aria-current={selected ? 'page' : undefined}
+            className={linkClass(selected) + ' hidden xl:inline-block'}
+          >
+            {dept.name}
+            {selected && (
+              <span className="absolute inset-x-0 -bottom-[18px] h-px bg-[var(--g2)]" />
+            )}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
+function MobileNav() {
+  const pathname = usePathname();
+  const department = useSearchParams().get('d');
+
+  const itemClass =
+    'shrink-0 border-b pb-1 text-[9px] uppercase tracking-[0.16em] transition-colors duration-300';
+
+  return (
+    <>
+      <Link
+        href="/"
+        aria-current={pathname === '/' ? 'page' : undefined}
+        className={
+          itemClass +
+          ' ' +
+          (pathname === '/'
+            ? 'border-[var(--g2)] text-[var(--g2)]'
+            : 'border-transparent text-mute hover:text-[var(--g2)]')
+        }
+      >
+        Главная
+      </Link>
+
+      <Link
+        href="/catalog"
+        aria-current={
+          pathname === '/catalog' && !department ? 'page' : undefined
+        }
+        className={
+          itemClass +
+          ' ' +
+          (pathname === '/catalog' && !department
+            ? 'border-[var(--g2)] text-[var(--g2)]'
+            : 'border-transparent text-mute hover:text-[var(--g2)]')
+        }
+      >
+        Каталог
+      </Link>
+
+      {DEPTS.map((dept) => {
+        const selected =
+          pathname === '/catalog' && department === dept.id;
+
+        return (
+          <Link
+            key={dept.id}
+            href={`/catalog?d=${dept.id}`}
+            aria-current={selected ? 'page' : undefined}
+            className={
+              itemClass +
+              ' ' +
+              (selected
+                ? 'border-[var(--g2)] text-[var(--g2)]'
+                : 'border-transparent text-mute hover:text-[var(--g2)]')
+            }
+          >
+            {dept.name}
+          </Link>
+        );
+      })}
+    </>
+  );
+}
+
+function NavFallback() {
+  return <div className="hidden h-5 lg:block" aria-hidden="true" />;
+}
+
+export default function Header() {
+  const mounted = useMounted();
+  const router = useRouter();
+  const theme = useTheme();
+
+  const {
+    cart,
+    fav,
+    user,
+    setOpen,
+    setSearch,
+    setLogin,
+  } = useStore();
+
+  const cartCount = mounted
+    ? cart.reduce((sum, item) => sum + item.qty, 0)
+    : 0;
+
+  const favCount = mounted ? fav.length : 0;
+  const dark = theme === 'dark';
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-line bg-bg/90 backdrop-blur-2xl transition-colors duration-300">
+      {/* Nafis oltin chiziq */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--g2)]/50 to-transparent"
+      />
+
+      <div className="mx-auto flex h-[68px] max-w-[1600px] items-center justify-between gap-2 px-3 sm:gap-4 sm:px-6 lg:h-[76px] lg:px-10">
+        {/* Logo */}
+        <Link
+          href="/"
+          aria-label="L Vision — главная"
+          className="group flex shrink-0 items-center gap-2 sm:gap-3"
+        >
+          <span className="grid h-9 w-9 place-items-center border border-[var(--gold-border)] text-sm font-light tracking-[-0.08em] text-ac transition-all duration-300 group-hover:border-[var(--g2)] group-hover:bg-[var(--gold-soft)] sm:h-10 sm:w-10">
+            LV
+          </span>
+
+          <span className="flex flex-col gap-1">
+            <span className="text-[11px] font-light leading-none tracking-[0.16em] text-fg transition-colors group-hover:text-[var(--g1)] sm:text-sm sm:tracking-[0.23em]">
+              L VISION
+            </span>
+
+            <span className="hidden text-[8px] uppercase leading-none tracking-[0.2em] text-mute sm:block">
+              Curated lifestyle
+            </span>
+          </span>
+        </Link>
+
+        {/* Desktop navigatsiya */}
+        <Suspense fallback={<NavFallback />}>
+          <Nav />
+        </Suspense>
+
+        {/* Tugmalar */}
+        <div className="flex shrink-0 items-center gap-0 sm:gap-1">
+          {/* Qidiruv */}
+          <button
+            type="button"
+            aria-label="Поиск"
+            title="Поиск"
+            onClick={() => setSearch(true)}
+            className={iconButton}
+          >
+            <Search
+              size={18}
+              strokeWidth={1.5}
+              className="transition-transform duration-300 group-hover:scale-110"
+            />
+          </button>
+
+          {/* Dark / light mode */}
+          <button
+            type="button"
+            aria-label={
+              dark
+                ? 'Включить светлую тему'
+                : 'Включить тёмную тему'
+            }
+            title="Тема оформления"
+            onClick={toggleTheme}
+            className={iconButton}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={theme}
+                initial={{ rotate: -70, opacity: 0, scale: 0.8 }}
+                animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                exit={{ rotate: 70, opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.2 }}
+                className="block"
+              >
+                {dark ? (
+                  <Sun size={18} strokeWidth={1.5} />
+                ) : (
+                  <Moon size={18} strokeWidth={1.5} />
+                )}
+              </motion.span>
+            </AnimatePresence>
+          </button>
+
+          {/* Sevimlilar */}
+          <Link
+            href="/fav"
+            aria-label={`Избранное${favCount ? `: ${favCount}` : ''}`}
+            title="Избранное"
+            className={iconButton}
+          >
+            <Heart
+              size={18}
+              strokeWidth={1.5}
+              className="transition-transform duration-300 group-hover:scale-110"
+            />
+
+            {favCount > 0 && <Badge n={favCount} />}
+          </Link>
+
+          {/* Profil */}
+          <button
+            type="button"
+            aria-label="Профиль"
+            title="Профиль"
+            onClick={() =>
+              user ? router.push('/profile') : setLogin(true)
+            }
+            className={iconButton + ' hidden md:grid'}
+          >
+            <User
+              size={18}
+              strokeWidth={1.5}
+              className="transition-transform duration-300 group-hover:scale-110"
+            />
+          </button>
+
+          {/* Savat */}
+          <button
+            type="button"
+            aria-label={`Корзина${cartCount ? `: ${cartCount}` : ''}`}
+            title="Корзина"
+            onClick={() => setOpen(true)}
+            className={iconButton}
+          >
+            <ShoppingBag
+              size={18}
+              strokeWidth={1.5}
+              className="transition-transform duration-300 group-hover:scale-110"
+            />
+
+            {cartCount > 0 && <Badge n={cartCount} />}
+          </button>
+
+          {/* ADMIN PANEL — savat yonida */}
+          <Link
+            href="/admin"
+            aria-label="Админ-панель"
+            title="Админ-панель"
+            className={
+              iconButton +
+              ' ml-1 border border-[var(--gold-border)] text-ac hover:bg-[var(--gold-soft)]'
+            }
+          >
+            <LayoutDashboard
+              size={18}
+              strokeWidth={1.5}
+              className="transition-transform duration-300 group-hover:scale-110"
+            />
+          </Link>
+
+          {/* Desktop uchun katalog tugmasi */}
+          <Link
+            href="/catalog"
+            className="ml-1 hidden h-10 items-center gap-2 border border-[var(--gold-border)] px-3 text-[9px] uppercase tracking-[0.12em] text-fg transition-all duration-300 hover:bg-[var(--gold-soft)] hover:text-[var(--g1)] xl:flex"
+          >
+            Каталог
+          </Link>
+        </div>
+      </div>
+
+      {/* Mobil kategoriya menyusi */}
+      <div className="border-t border-line/70 lg:hidden">
+        <nav
+          aria-label="Мобильная навигация"
+          className="mx-auto flex max-w-[1600px] items-center gap-6 overflow-x-auto px-5 py-3 sm:justify-center sm:gap-8"
+        >
+          <Suspense fallback={null}>
+            <MobileNav />
+          </Suspense>
+        </nav>
+      </div>
+    </header>
+  );
+}

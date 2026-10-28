@@ -20,7 +20,7 @@ export default function LoginModal(){
    <div className="mb-5 grid h-12 w-12 place-items-center rounded-full border border-ac">{step==='phone'?<Smartphone size={22}/>:<ShieldCheck size={22}/>}</div>
    <h2 className="text-2xl font-light">{step==='phone'?'Вход по номеру телефона':'Введите код'}</h2>
    <p className="mb-5 mt-1 text-sm text-mute">{step==='phone'?'Без номера телефона оформить заказ нельзя.':`Код отправлен на ${full}`}</p>
-   {step==='phone'?<div className="flex"><span className="grid place-items-center rounded-l-[10px] border border-r-0 border-line bg-surf px-3 text-sm">+998</span><input autoFocus inputMode="numeric" placeholder="90 123 45 67" value={ph} onChange={e=>setPh(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()}/></div>
+   {step==='phone'?<div className="flex"><span className="grid place-items-center border border-r-0 border-line bg-surf px-3 text-sm">+998</span><input autoFocus inputMode="numeric" placeholder="90 123 45 67" value={ph} onChange={e=>setPh(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()}/></div>
    :<input autoFocus inputMode="numeric" maxLength={6} placeholder="••••••" value={code} onChange={e=>setCode(e.target.value.replace(/\D/g,''))} onKeyDown={e=>e.key==='Enter'&&code.length===6&&verify()} className="text-center text-2xl tracking-[.6em]"/>}
    <p className="min-h-5 pt-2 text-xs text-red-500">{err}</p>
    <button className="btn mt-2 w-full" disabled={busy||(step==='code'&&code.length!==6)} onClick={step==='phone'?send:verify}>{busy?'Подождите…':step==='phone'?'Получить код':'Подтвердить'}</button>
