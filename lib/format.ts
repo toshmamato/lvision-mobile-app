@@ -1,5 +1,5 @@
 
-export const fmt = (n: number) => {
+export const fmt = (n: number): string => {
   const value = Number(n);
 
   if (!Number.isFinite(value)) {
@@ -15,7 +15,7 @@ export const fmt = (n: number) => {
 export const disc = (p: {
   price: number;
   old_price: number | null;
-}) => {
+}): number => {
   const price = Number(p.price);
   const oldPrice = Number(p.old_price);
 
@@ -33,8 +33,8 @@ export const disc = (p: {
 
 export const tot = (
   stock: Record<string, number | string> | null | undefined
-) =>
-  Object.values(stock || {}).reduce(
+): number =>
+  Object.values(stock ?? {}).reduce<number>(
     (sum, value) => sum + (Number(value) || 0),
     0
   );
