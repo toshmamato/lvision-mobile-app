@@ -181,7 +181,7 @@ export default function Art({
           decoding="async"
           draggable={false}
           onError={() => setImageIndex((current) => current + 1)}
-          className="absolute inset-0 z-[1] h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+          className="absolute inset-0 z-[1] h-full w-full object-contain"
         />
       )}
 
