@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import {
   Banknote,
@@ -7,6 +6,7 @@ import {
   ArrowUpRight,
   ArrowRight,
   MoveRight,
+  LockKeyhole,
 } from 'lucide-react';
 
 import Hero from '@/components/Hero';
@@ -16,6 +16,10 @@ import { DEPTS } from '@/lib/depts';
 import { getProducts } from '@/lib/products';
 
 export const dynamic = 'force-dynamic';
+
+function isComingSoon(id: string) {
+  return id === 'marry' || id === 'coffee';
+}
 
 function SectionHeading({
   eyebrow,
@@ -78,10 +82,10 @@ export default async function Home() {
 
   return (
     <main className="overflow-hidden">
-      {/* HERO — asosiy bosh sahifa */}
+      {/* HERO */}
       <Hero />
 
-      {/* Kategoriyalar navigatsiyasi */}
+      {/* KATEGORIYALAR NAVIGATSIYASI */}
       <section className="border-y border-line">
         <div className="mx-auto max-w-7xl px-5 py-8 md:py-10">
           <div className="mb-6 flex items-center justify-between">
@@ -95,36 +99,69 @@ export default async function Home() {
           </div>
 
           <div className="flex gap-5 overflow-x-auto pb-2 md:justify-between md:gap-8">
-            {DEPTS.map((d, index) => (
-              <Link
-                key={d.id}
-                href={`/catalog?d=${d.id}`}
-                className="group w-[76px] shrink-0 text-center md:w-28"
-              >
-                <div className="relative mx-auto mb-3 aspect-square w-full rounded-full border border-line p-1 transition-all duration-500 group-hover:border-ac group-hover:shadow-[0_0_25px_var(--glow)]">
-                  <div className="h-full w-full overflow-hidden rounded-full">
-                    <Art
-                      file={`dept-${d.id}`}
-                      dept={d.id}
-                      className="aspect-square rounded-full transition-transform duration-700 group-hover:scale-110"
-                    />
+            {DEPTS.map((d, index) => {
+              const soon = isComingSoon(d.id);
+
+              const content = (
+                <>
+                  <div className="relative mx-auto mb-3 aspect-square w-full rounded-full border border-line p-1 transition-all duration-500 group-hover:border-ac group-hover:shadow-[0_0_25px_var(--glow)]">
+                    <div className="h-full w-full overflow-hidden rounded-full">
+                      <Art
+                        file={`dept-${d.id}`}
+                        dept={d.id}
+                        alt={d.name}
+                        className="aspect-square rounded-full transition-transform duration-700 group-hover:scale-110"
+                      />
+                    </div>
+
+                    <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full border border-line bg-bg text-[8px] text-ac">
+                      0{index + 1}
+                    </span>
+
+                    {soon && (
+                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 whitespace-nowrap border border-[var(--gold-border)] bg-bg px-2 py-1 text-[7px] uppercase tracking-[0.12em] text-ac">
+                        Soon
+                      </span>
+                    )}
                   </div>
 
-                  <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full border border-line bg-bg text-[8px] text-ac">
-                    0{index + 1}
+                  <span
+                    className={
+                      'block text-[9px] uppercase tracking-[0.12em] transition-colors duration-300 md:text-[10px] ' +
+                      (soon
+                        ? 'text-mute/60'
+                        : 'text-mute group-hover:text-ac')
+                    }
+                  >
+                    {d.name}
                   </span>
-                </div>
+                </>
+              );
 
-                <span className="block text-[9px] uppercase tracking-[0.12em] text-mute transition-colors duration-300 group-hover:text-ac md:text-[10px]">
-                  {d.name}
-                </span>
-              </Link>
-            ))}
+              return soon ? (
+                <div
+                  key={d.id}
+                  aria-disabled="true"
+                  title="Скоро открытие"
+                  className="group w-[76px] shrink-0 cursor-not-allowed text-center opacity-70 md:w-28"
+                >
+                  {content}
+                </div>
+              ) : (
+                <Link
+                  key={d.id}
+                  href={`/catalog?d=${d.id}`}
+                  className="group w-[76px] shrink-0 text-center md:w-28"
+                >
+                  {content}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Brand statement */}
+      {/* BRAND STATEMENT */}
       <section className="mx-auto max-w-7xl px-5 py-14 md:py-20">
         <div className="grid gap-5 border-b border-line pb-10 md:grid-cols-[1fr_auto] md:items-end md:gap-10 md:pb-14">
           <div>
@@ -145,7 +182,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Yangi mahsulotlar */}
+      {/* NOVINKALAR */}
       {nw.length > 0 && (
         <section className="mx-auto max-w-7xl px-5 pb-14 md:pb-20">
           <SectionHeading
@@ -162,7 +199,7 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Asosiy kategoriyalar */}
+      {/* ASOSIY KATEGORIYALAR */}
       <section className="border-y border-line bg-[var(--surf)]">
         <div className="mx-auto max-w-7xl px-5 py-12 md:py-20">
           <SectionHeading
@@ -172,62 +209,109 @@ export default async function Home() {
           />
 
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
-            {DEPTS.map((d, index) => (
-              <Link
-                key={d.id}
-                href={`/catalog?d=${d.id}`}
-                className="group relative block overflow-hidden bg-bg"
-              >
-                <div className="relative aspect-[3/4] overflow-hidden">
-                  <Art
-                    file={`dept-${d.id}`}
-                    dept={d.id}
-                    className="aspect-[3/4] transition-transform duration-700 group-hover:scale-[1.045]"
-                  />
+            {DEPTS.map((d, index) => {
+              const soon = isComingSoon(d.id);
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-95" />
+              const card = (
+                <div className="group relative block overflow-hidden bg-bg">
+                  <div className="relative aspect-[3/4] overflow-hidden">
+                    <Art
+                      file={`dept-${d.id}`}
+                      dept={d.id}
+                      alt={d.name}
+                      className="aspect-[3/4] transition-transform duration-700 group-hover:scale-[1.045]"
+                    />
 
-                  <div className="absolute inset-0 border border-white/0 transition-colors duration-500 group-hover:border-[var(--gold-border)]" />
+                    {/* Rasm ustidagi gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-95" />
 
-                  <span className="absolute left-3 top-3 text-[9px] tracking-[0.2em] text-white/80 md:left-5 md:top-5">
-                    0{index + 1}
-                  </span>
+                    {/* Oltin ramka */}
+                    <div className="absolute inset-2 border border-white/[0.08] transition-colors duration-500 group-hover:border-[var(--gold-border)]" />
 
-                  <ArrowUpRight
-                    size={19}
-                    strokeWidth={1.2}
-                    className="absolute right-3 top-3 -translate-x-1 -translate-y-1 text-white opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 md:right-5 md:top-5"
-                  />
+                    <span className="absolute left-3 top-3 text-[9px] tracking-[0.2em] text-white/80 md:left-5 md:top-5">
+                      0{index + 1}
+                    </span>
 
-                  <div className="absolute inset-x-0 bottom-0 p-3 md:p-5">
-                    <p className="mb-2 text-[8px] uppercase tracking-[0.22em] text-white/60 md:text-[9px]">
-                      L Vision collection
-                    </p>
-
-                    <h3 className="text-sm font-light tracking-[0.04em] text-white md:text-xl">
-                      {d.name}
-                    </h3>
-
-                    <p className="mt-2 line-clamp-2 text-[10px] leading-5 text-white/65 md:text-xs">
-                      {d.sub}
-                    </p>
-
-                    <div className="mt-4 flex items-center gap-2 text-[9px] uppercase tracking-[0.17em] text-white/90">
-                      <span>Открыть раздел</span>
-                      <MoveRight
-                        size={13}
-                        className="transition-transform duration-300 group-hover:translate-x-1.5"
+                    {!soon && (
+                      <ArrowUpRight
+                        size={19}
+                        strokeWidth={1.2}
+                        className="absolute right-3 top-3 -translate-x-1 -translate-y-1 text-white opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 md:right-5 md:top-5"
                       />
+                    )}
+
+                    {/* Coming Soon overlay */}
+                    {soon && (
+                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/55 px-2 text-center backdrop-blur-[2px]">
+                        <div className="mb-3 grid h-10 w-10 place-items-center rounded-full border border-[var(--gold-border)] text-ac">
+                          <LockKeyhole size={17} strokeWidth={1.2} />
+                        </div>
+
+                        <span className="border border-[var(--gold-border)] bg-black/30 px-3 py-2 text-[9px] uppercase tracking-[0.2em] text-ac sm:px-5 sm:text-[11px]">
+                          Coming Soon
+                        </span>
+
+                        <p className="mt-3 text-[8px] uppercase tracking-[0.13em] text-white/60">
+                          Скоро открытие
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Kategoriya ma'lumotlari */}
+                    <div className="absolute inset-x-0 bottom-0 z-20 p-3 md:p-5">
+                      <p className="mb-2 text-[8px] uppercase tracking-[0.22em] text-white/60 md:text-[9px]">
+                        {soon ? 'Coming soon collection' : 'L Vision collection'}
+                      </p>
+
+                      <h3 className="text-sm font-light tracking-[0.04em] text-white md:text-xl">
+                        {d.name}
+                      </h3>
+
+                      <p className="mt-2 line-clamp-2 text-[10px] leading-5 text-white/65 md:text-xs">
+                        {d.sub}
+                      </p>
+
+                      <div className="mt-4 flex items-center gap-2 text-[9px] uppercase tracking-[0.17em] text-white/90">
+                        <span>
+                          {soon ? 'Скоро открытие' : 'Открыть раздел'}
+                        </span>
+
+                        {!soon && (
+                          <MoveRight
+                            size={13}
+                            className="transition-transform duration-300 group-hover:translate-x-1.5"
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </Link>
-            ))}
+              );
+
+              return soon ? (
+                <div
+                  key={d.id}
+                  aria-disabled="true"
+                  title="Скоро открытие"
+                  className="cursor-not-allowed select-none"
+                >
+                  {card}
+                </div>
+              ) : (
+                <Link
+                  key={d.id}
+                  href={`/catalog?d=${d.id}`}
+                  className="block"
+                >
+                  {card}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Tanlangan mahsulotlar */}
+      {/* TANLANGAN MAHSULOTLAR */}
       {sale.length > 0 && (
         <section className="mx-auto max-w-7xl px-5 py-14 md:py-20">
           <SectionHeading
@@ -244,7 +328,7 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Afzalliklar */}
+      {/* AFZALLIKLAR */}
       <section className="mx-auto max-w-7xl px-5 pb-14 pt-4 md:pb-20">
         <div className="border-y border-line">
           <div className="grid divide-y divide-line md:grid-cols-3 md:divide-x md:divide-y-0">
@@ -277,7 +361,7 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Pastki chaqiriq */}
+        {/* PASTKI CHAQIRIQ */}
         <div className="flex flex-col gap-5 py-10 md:flex-row md:items-end md:justify-between md:py-14">
           <div>
             <p className="mb-3 text-[9px] uppercase tracking-[0.28em] text-ac">
