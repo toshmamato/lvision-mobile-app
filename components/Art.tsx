@@ -1,7 +1,7 @@
-
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
 
@@ -9,7 +9,7 @@ const PHOTO_BASE = SUPABASE_URL
   ? `${SUPABASE_URL.replace(/\/$/, '')}/storage/v1/object/public/photos/`
   : '';
 
-const SH: Record<string, (g: string) => React.ReactNode> = {
+const SH: Record<string, (g: string) => ReactNode> = {
   lv: (g) => (
     <>
       <path
@@ -37,14 +37,7 @@ const SH: Record<string, (g: string) => React.ReactNode> = {
 
   marry: (g) => (
     <>
-      <circle
-        cx="50"
-        cy="72"
-        r="24"
-        fill="none"
-        stroke={g}
-        strokeWidth="7"
-      />
+      <circle cx="50" cy="72" r="24" fill="none" stroke={g} strokeWidth="7" />
       <circle
         cx="50"
         cy="72"
@@ -61,20 +54,9 @@ const SH: Record<string, (g: string) => React.ReactNode> = {
 
   flowers: (g) => (
     <>
-      <path
-        d="M50 112V58"
-        fill="none"
-        stroke="#83966b"
-        strokeWidth="3"
-      />
-      <path
-        d="M50 90Q30 75 24 86Q35 99 50 90Z"
-        fill="#6b8255"
-      />
-      <path
-        d="M50 102Q70 82 78 94Q65 109 50 102Z"
-        fill="#8a9c68"
-      />
+      <path d="M50 112V58" fill="none" stroke="#83966b" strokeWidth="3" />
+      <path d="M50 90Q30 75 24 86Q35 99 50 90Z" fill="#6b8255" />
+      <path d="M50 102Q70 82 78 94Q65 109 50 102Z" fill="#8a9c68" />
       {[
         [50, 32],
         [68, 46],
@@ -82,14 +64,7 @@ const SH: Record<string, (g: string) => React.ReactNode> = {
         [62, 64],
         [38, 64],
       ].map(([x, y], i) => (
-        <circle
-          key={i}
-          cx={x}
-          cy={y}
-          r="12"
-          fill={g}
-          opacity=".92"
-        />
+        <circle key={i} cx={x} cy={y} r="12" fill={g} opacity=".92" />
       ))}
       <circle cx="50" cy="50" r="9" fill="#e9d27a" />
     </>
@@ -97,10 +72,7 @@ const SH: Record<string, (g: string) => React.ReactNode> = {
 
   coffee: (g) => (
     <>
-      <path
-        d="M26 52h46v28a23 23 0 01-46 0z"
-        fill={g}
-      />
+      <path d="M26 52h46v28a23 23 0 01-46 0z" fill={g} />
       <path
         d="M72 60h6a9 9 0 010 18h-7"
         fill="none"
@@ -114,45 +86,48 @@ const SH: Record<string, (g: string) => React.ReactNode> = {
         strokeOpacity=".8"
         strokeWidth="2"
       />
-      <ellipse
-        cx="49"
-        cy="52"
-        rx="23"
-        ry="4"
-        fill="#f9e29b"
-        fillOpacity=".4"
-      />
+      <ellipse cx="49" cy="52" rx="23" ry="4" fill="#f9e29b" fillOpacity=".4" />
     </>
   ),
 };
 
-/**
- * Rasm manzillari:
- * hero.jpg
- * p-12.jpg
- * dept-lv.jpg
- * dept-marry.jpg
- *
- * Barcha fayllar Supabase Storage -> photos bucket ichida bo'ladi.
- */
-export default function Art({
-  file,
-  dept,
-  g = '#d4af37',
-  className = '',
-  alt = '',
-}: {
+type ArtProps = {
   file: string;
   dept: string;
+  src?: string;
   g?: string;
   className?: string;
   alt?: string;
-}) {
-  const [ok, setOk] = useState(true);
+};
 
-  const imageUrl = PHOTO_BASE
-    ? `${PHOTO_BASE}${file}.jpg`
-    : '';
+export default function Art({
+  file,
+  dept,
+  src,
+  g = '#d4af37',
+  className = '',
+  alt = '',
+}: ArtProps) {
+  const [imageIndex, setImageIndex] = useState(0);
+
+  useEffect(() => {
+    setImageIndex(0);
+  }, [file, src]);
+
+  // Rasmlarni quyidagi tartibda tekshiradi:
+  // 1. Berilgan src havolasi
+  // 2. Supabase Storage
+  // 3. public papkasi
+
+  const imageUrls = [
+    src?.trim(),
+    PHOTO_BASE ? `${PHOTO_BASE}${file}.jpg` : '',
+    `/${file}.jpg`,
+  ].filter((url): url is string => Boolean(url));
+
+  const imageUrl = imageUrls[imageIndex];
+
+  const gradientId = `gold-${file.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
 
   return (
     <div
@@ -161,7 +136,7 @@ export default function Art({
         className
       }
     >
-      {/* Premium fon bezagi */}
+      {/* Premium fon */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -171,7 +146,7 @@ export default function Art({
         }}
       />
 
-      {/* No-photo holati uchun kategoriya silueti */}
+      {/* Oltin SVG fallback */}
       <svg
         viewBox="0 0 100 120"
         aria-hidden="true"
@@ -179,7 +154,7 @@ export default function Art({
       >
         <defs>
           <linearGradient
-            id={`gold-${file.replace(/[^a-zA-Z0-9_-]/g, '-')}`}
+            id={gradientId}
             x1="0%"
             y1="0%"
             x2="100%"
@@ -191,22 +166,21 @@ export default function Art({
           </linearGradient>
         </defs>
 
-        <g
-          fill={`url(#gold-${file.replace(/[^a-zA-Z0-9_-]/g, '-')})`}
-        >
+        <g fill={`url(#${gradientId})`}>
           {(SH[dept] ?? SH.lv)(g)}
         </g>
       </svg>
 
-      {/* Supabase rasmi */}
-      {imageUrl && ok && (
+      {/* Rasm */}
+      {imageUrl && (
         <img
+          key={imageUrl}
           src={imageUrl}
-          alt={alt}
+          alt={alt || file}
           loading="lazy"
           decoding="async"
           draggable={false}
-          onError={() => setOk(false)}
+          onError={() => setImageIndex((current) => current + 1)}
           className="absolute inset-0 z-[1] h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
         />
       )}
@@ -217,13 +191,13 @@ export default function Art({
         className="pointer-events-none absolute inset-0 z-[2] bg-gradient-to-t from-black/10 via-transparent to-white/[0.025]"
       />
 
-      {/* Nafis ramka */}
+      {/* Ramka */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-2 z-[3] border border-white/[0.07] transition-colors duration-500 group-hover:border-[#d4af37]/30"
       />
 
-      {/* Pastdagi oltin chiziq */}
+      {/* Oltin chiziq */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-px bg-gradient-to-r from-transparent via-[#d4af37]/40 to-transparent"

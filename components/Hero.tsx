@@ -4,8 +4,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
-import Art from './Art';
+import { ArrowRight } from 'lucide-react';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -143,7 +142,7 @@ export default function Hero() {
               className="lnk inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-mute hover:text-ac"
             >
               Коллекции
-              <ArrowUpRight size={13} />
+              <ArrowRight size={13} />
             </Link>
           </motion.div>
 
@@ -174,7 +173,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* RIGHT: Main visual */}
+        {/* RIGHT: L VISION STUDIO IMAGE */}
         <motion.div
           variants={{
             hidden: { opacity: 0, y: 22, scale: 0.97 },
@@ -193,46 +192,16 @@ export default function Hero() {
             className="absolute -right-2 -top-2 z-0 h-24 w-24 border-r border-t border-[var(--gold-border)] md:-right-3 md:-top-3 md:h-32 md:w-32"
           />
 
+          {/* Main image */}
           <div className="relative z-10 overflow-hidden border border-line bg-surf p-1">
-            <div className="relative overflow-hidden">
-              <Art
-                file="hero"
-                dept="lv"
-                g="#d4af37"
-                alt="L Vision exclusive fashion collection"
-                className="aspect-[4/5] w-full transition-transform duration-700"
+            <div className="relative overflow-hidden bg-[#f2eee5]">
+              <img
+                src="/lvision-studio.png"
+                alt="L Vision Studio 01 / 26 — The new perspective"
+                loading="eager"
+                decoding="async"
+                className="block h-auto w-full object-contain transition-transform duration-700 hover:scale-[1.015]"
               />
-
-              {/* Elegant image overlay */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10" />
-
-              {/* Top label */}
-              <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4 md:p-6">
-                <span className="border border-white/30 bg-black/20 px-3 py-2 text-[8px] uppercase tracking-[0.23em] text-white backdrop-blur-sm">
-                  L Vision Studio
-                </span>
-
-                <span className="text-[9px] tracking-[0.2em] text-white/80">
-                  01 / 26
-                </span>
-              </div>
-
-              {/* Bottom label */}
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4 md:p-6">
-                <div>
-                  <p className="mb-2 text-[8px] uppercase tracking-[0.25em] text-white/65">
-                    The new perspective
-                  </p>
-
-                  <p className="text-xl font-light tracking-wide text-white md:text-3xl">
-                    Defined by vision.
-                  </p>
-                </div>
-
-                <span className="grid h-10 w-10 place-items-center rounded-full border border-white/40 text-white transition-colors duration-300 hover:bg-white hover:text-black md:h-12 md:w-12">
-                  <ArrowUpRight size={18} strokeWidth={1.2} />
-                </span>
-              </div>
             </div>
           </div>
 
@@ -241,14 +210,6 @@ export default function Hero() {
             aria-hidden="true"
             className="absolute -bottom-3 -left-3 z-0 h-20 w-20 border-b border-l border-[var(--gold-border)] md:-bottom-4 md:-left-4 md:h-28 md:w-28"
           />
-
-          <div className="mt-4 flex items-center justify-between gap-3 text-[8px] uppercase tracking-[0.2em] text-mute md:mt-5 md:text-[9px]">
-            <span>Modern essentials</span>
-
-            <span className="h-px flex-1 bg-line" />
-
-            <span className="text-ac">L/V — 2026</span>
-          </div>
         </motion.div>
       </motion.div>
 
