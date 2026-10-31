@@ -46,7 +46,7 @@ function SectionHeading({
         href={href}
         className="lnk mb-1 flex shrink-0 items-center gap-2 text-[10px] uppercase tracking-[0.14em] text-mute transition-colors hover:text-ac"
       >
-        <span>Р вЂ™РЎРѓР Вµ РЎвЂљР С•Р Р†Р В°РЎР‚РЎвЂ№</span>
+        <span>Все товары</span>
         <ArrowUpRight size={14} />
       </Link>
     </div>
@@ -57,20 +57,20 @@ const benefits = [
   {
     Icon: Banknote,
     number: '01',
-    title: 'Р С›Р С—Р В»Р В°РЎвЂљР В° Р С—РЎР‚Р С‘ Р С—Р С•Р В»РЎС“РЎвЂЎР ВµР Р…Р С‘Р С‘',
-    description: 'Р С›Р С—Р В»Р В°РЎвЂЎР С‘Р Р†Р В°Р в„–РЎвЂљР Вµ Р В·Р В°Р С”Р В°Р В·, Р С”Р С•Р С–Р Т‘Р В° Р С—Р С•Р В»РЎС“РЎвЂЎР С‘РЎвЂљР Вµ Р ВµР С–Р С•.',
+    title: 'Оплата при получении',
+    description: 'Оплачивайте заказ, когда получите его.',
   },
   {
     Icon: PhoneCall,
     number: '02',
-    title: 'Р вЂ”Р В°Р С”Р В°Р В· Р С—Р С• РЎвЂљР ВµР В»Р ВµРЎвЂћР С•Р Р…РЎС“',
-    description: 'Р СџР С•Р Т‘РЎвЂљР Р†Р ВµРЎР‚Р В¶Р Т‘Р ВµР Р…Р С‘Р Вµ Р В·Р В°Р С”Р В°Р В·Р В° Р С—Р С• Р Р†Р В°РЎв‚¬Р ВµР СРЎС“ Р Р…Р С•Р СР ВµРЎР‚РЎС“.',
+    title: 'Заказ по телефону',
+    description: 'Подтверждение заказа по вашему номеру.',
   },
   {
     Icon: Sparkles,
     number: '03',
-    title: 'Р В§Р ВµРЎвЂљРЎвЂ№РЎР‚Р Вµ Р Р…Р В°Р С—РЎР‚Р В°Р Р†Р В»Р ВµР Р…Р С‘РЎРЏ',
-    description: 'Р С›Р Т‘Р ВµР В¶Р Т‘Р В°, Р С”Р С•Р В»РЎРЉРЎвЂ Р В°, РЎвЂ Р Р†Р ВµРЎвЂљРЎвЂ№ Р С‘ Р С”Р С•РЎвЂћР Вµ Р Р† Р С•Р Т‘Р Р…Р С•Р С Р СР ВµРЎРѓРЎвЂљР Вµ.',
+    title: 'Четыре направления',
+    description: 'Одежда, кольца, цветы и кофе в одном месте.',
   },
 ];
 
@@ -90,7 +90,7 @@ export default async function Home() {
         <div className="mx-auto max-w-7xl px-5 py-8 md:py-10">
           <div className="mb-6 flex items-center justify-between">
             <p className="text-[9px] uppercase tracking-[0.25em] text-mute">
-              Р СњР В°РЎв‚¬Р С‘ Р Р…Р В°Р С—РЎР‚Р В°Р Р†Р В»Р ВµР Р…Р С‘РЎРЏ
+              Наши направления
             </p>
 
             <span className="text-[9px] tracking-[0.2em] text-ac">
@@ -142,7 +142,7 @@ export default async function Home() {
                 <div
                   key={d.id}
                   aria-disabled="true"
-                  title="Р РЋР С”Р С•РЎР‚Р С• Р С•РЎвЂљР С”РЎР‚РЎвЂ№РЎвЂљР С‘Р Вµ"
+                  title="Скоро открытие"
                   className="group w-[76px] shrink-0 cursor-not-allowed text-center opacity-70 md:w-28"
                 >
                   {content}
@@ -170,14 +170,14 @@ export default async function Home() {
             </p>
 
             <h2 className="max-w-3xl text-4xl font-light leading-[1.12] tracking-[-0.055em] md:text-6xl lg:text-7xl">
-              Р РЋРЎвЂљР С‘Р В»РЎРЉ Р Р…Р В°РЎвЂЎР С‘Р Р…Р В°Р ВµРЎвЂљРЎРѓРЎРЏ
-              <span className="block text-ac">РЎРѓ Р Т‘Р ВµРЎвЂљР В°Р В»Р ВµР в„–.</span>
+              Стиль начинается
+              <span className="block text-ac">с деталей.</span>
             </h2>
           </div>
 
           <p className="max-w-xs text-sm leading-7 text-mute md:text-right">
-            Р С›РЎвЂљР С”РЎР‚Р С•Р в„–РЎвЂљР Вµ Р С”Р С•Р В»Р В»Р ВµР С”РЎвЂ Р С‘Р С‘ L Vision Р С‘ Р Р…Р В°Р в„–Р Т‘Р С‘РЎвЂљР Вµ Р Т‘Р ВµРЎвЂљР В°Р В»Р С‘, Р С”Р С•РЎвЂљР С•РЎР‚РЎвЂ№Р Вµ Р С—Р С•Р Т‘РЎвЂЎР ВµРЎР‚Р С”Р Р…РЎС“РЎвЂљ
-            Р Р†Р В°РЎв‚¬ Р С‘Р Р…Р Т‘Р С‘Р Р†Р С‘Р Т‘РЎС“Р В°Р В»РЎРЉР Р…РЎвЂ№Р в„– РЎРѓРЎвЂљР С‘Р В»РЎРЉ.
+            Откройте коллекции L Vision и найдите детали, которые подчеркнут
+            ваш индивидуальный стиль.
           </p>
         </div>
       </section>
@@ -186,8 +186,8 @@ export default async function Home() {
       {nw.length > 0 && (
         <section className="mx-auto max-w-7xl px-5 pb-14 md:pb-20">
           <SectionHeading
-            eyebrow="Р СњР ВµР Т‘Р В°Р Р†Р Р…Р С• Р Р† Р С”Р С•Р В»Р В»Р ВµР С”РЎвЂ Р С‘Р С‘ / 01"
-            title="Р СњР С•Р Р†Р С‘Р Р…Р С”Р С‘"
+            eyebrow="Недавно в коллекции / 01"
+            title="Новинки"
             href="/catalog"
           />
 
@@ -203,8 +203,8 @@ export default async function Home() {
       <section className="border-y border-line bg-[var(--surf)]">
         <div className="mx-auto max-w-7xl px-5 py-12 md:py-20">
           <SectionHeading
-            eyebrow="Р С›РЎвЂљР С”РЎР‚Р С•Р в„–РЎвЂљР Вµ Р Т‘Р В»РЎРЏ РЎРѓР ВµР В±РЎРЏ / 02"
-            title="Р вЂњР В»Р В°Р Р†Р Р…РЎвЂ№Р Вµ РЎР‚Р В°Р В·Р Т‘Р ВµР В»РЎвЂ№"
+            eyebrow="Откройте для себя / 02"
+            title="Главные разделы"
             href="/catalog"
           />
 
@@ -252,7 +252,7 @@ export default async function Home() {
                         </span>
 
                         <p className="mt-3 text-[8px] uppercase tracking-[0.13em] text-white/60">
-                          Р РЋР С”Р С•РЎР‚Р С• Р С•РЎвЂљР С”РЎР‚РЎвЂ№РЎвЂљР С‘Р Вµ
+                          Скоро открытие
                         </p>
                       </div>
                     )}
@@ -273,7 +273,7 @@ export default async function Home() {
 
                       <div className="mt-4 flex items-center gap-2 text-[9px] uppercase tracking-[0.17em] text-white/90">
                         <span>
-                          {soon ? 'Р РЋР С”Р С•РЎР‚Р С• Р С•РЎвЂљР С”РЎР‚РЎвЂ№РЎвЂљР С‘Р Вµ' : 'Р С›РЎвЂљР С”РЎР‚РЎвЂ№РЎвЂљРЎРЉ РЎР‚Р В°Р В·Р Т‘Р ВµР В»'}
+                          {soon ? 'Скоро открытие' : 'Открыть раздел'}
                         </span>
 
                         {!soon && (
@@ -292,7 +292,7 @@ export default async function Home() {
                 <div
                   key={d.id}
                   aria-disabled="true"
-                  title="Р РЋР С”Р С•РЎР‚Р С• Р С•РЎвЂљР С”РЎР‚РЎвЂ№РЎвЂљР С‘Р Вµ"
+                  title="Скоро открытие"
                   className="cursor-not-allowed select-none"
                 >
                   {card}
@@ -315,8 +315,8 @@ export default async function Home() {
       {sale.length > 0 && (
         <section className="mx-auto max-w-7xl px-5 py-14 md:py-20">
           <SectionHeading
-            eyebrow="Р вЂ™РЎвЂ№Р В±Р С•РЎР‚ L Vision / 03"
-            title="Р СџР С•Р Т‘Р В±Р С•РЎР‚Р С”Р В°"
+            eyebrow="Выбор L Vision / 03"
+            title="Подборка"
             href="/catalog"
           />
 
@@ -369,7 +369,7 @@ export default async function Home() {
             </p>
 
             <h2 className="text-3xl font-light tracking-[-0.04em] md:text-5xl">
-              Р СњР В°Р в„–Р Т‘Р С‘РЎвЂљР Вµ РЎРѓР Р†Р С•РЎвЂ.
+              Найдите своё.
             </h2>
           </div>
 
@@ -377,7 +377,7 @@ export default async function Home() {
             href="/catalog"
             className="btn group self-start md:self-auto"
           >
-            <span>Р вЂ™ Р С”Р В°РЎвЂљР В°Р В»Р С•Р С–</span>
+            <span>В каталог</span>
             <ArrowRight
               size={15}
               className="transition-transform duration-300 group-hover:translate-x-1"
